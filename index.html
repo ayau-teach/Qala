@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CITY LAB — Зверополис зертханасы</title>
+<style>
+:root{
+ --navy:#18334b;--blue:#2f7897;--sky:#dff2f5;--cream:#fff8e9;--paper:#fffdf7;
+ --orange:#f2a34a;--green:#75a98a;--red:#d86e61;--ink:#243746;--muted:#71818a;
+ --line:#e4e9e5;--shadow:0 12px 32px rgba(30,65,82,.10);--radius:20px;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:#f2f7f5;color:var(--ink);font-family:Inter,"Trebuchet MS",Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:258px;background:var(--navy);color:white;padding:24px 16px;display:flex;flex-direction:column;gap:22px;position:fixed;inset:0 auto 0 0;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px}
+.brand-mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#f5bb69,#e67f53);display:grid;place-items:center;font-size:25px;box-shadow:0 5px 16px #0b223655}
+.brand strong{display:block;font-size:18px;letter-spacing:1.4px}.brand small{color:#b9d1d8;font-size:11px}
+.nav-label{color:#8fb0bb;text-transform:uppercase;font-size:10px;letter-spacing:1.6px;padding:0 12px}
+nav{display:grid;gap:7px}
+.nav-btn{border:0;background:transparent;color:#d9e7e8;text-align:left;padding:12px 13px;border-radius:13px;display:flex;gap:12px;align-items:center;font-size:13px;transition:.2s}
+.nav-btn:hover,.nav-btn.active{background:#ffffff18;color:#fff}.nav-btn.active{box-shadow:inset 3px 0 #f2b45f}
+.nav-icon{font-size:18px;width:22px;text-align:center}
+.side-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding:17px 8px 0;color:#b7ccd1;font-size:11px;line-height:1.6}
+.main{margin-left:258px;width:calc(100% - 258px);padding:24px 32px 50px;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:12px}
+.breadcrumb{font-size:12px;color:var(--muted)}.top-actions{display:flex;gap:9px;align-items:center}
+.pill{border:1px solid var(--line);background:white;border-radius:30px;padding:8px 12px;font-size:11px;color:#50636e}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#70b78b;margin-right:6px}
+.mobile-menu{display:none}
+.page{display:none;animation:fade .3s ease}.page.active{display:block}
+@keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;min-height:330px;border-radius:26px;background:linear-gradient(105deg,#1c526c 0%,#367f91 48%,#e9ad62 100%);color:white;padding:35px 38px;box-shadow:var(--shadow)}
+.hero:before{content:"";position:absolute;width:430px;height:430px;border:1px solid #ffffff30;border-radius:50%;right:-65px;top:-210px;box-shadow:0 0 0 35px #ffffff0c,0 0 0 75px #ffffff0a}
+.hero:after{content:"";position:absolute;right:0;bottom:0;width:52%;height:78%;background:
+ linear-gradient(transparent 45%,#17445a 45%), 
+ linear-gradient(90deg,transparent 0 8%,#d6e6df 8% 17%,transparent 17% 22%,#f5d5a3 22% 34%,transparent 34% 40%,#b9d5ce 40% 55%,transparent 55% 61%,#f3c47f 61% 72%,transparent 72%);
+ clip-path:polygon(0 48%,7% 48%,7% 27%,15% 27%,15% 45%,22% 45%,22% 8%,34% 8%,34% 45%,42% 45%,42% 30%,51% 30%,51% 48%,60% 48%,60% 0,73% 0,73% 48%,80% 48%,80% 21%,91% 21%,91% 48%,100% 48%,100% 100%,0 100%);
+ opacity:.85}
+.hero-content{position:relative;z-index:2;max-width:580px}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffe2b6;font-weight:700}
+h1{font-size:clamp(30px,4vw,48px);line-height:1.08;margin:13px 0 12px;letter-spacing:-1px}
+.hero p{max-width:520px;line-height:1.65;color:#e5f1ef;font-size:14px}
+.primary{background:var(--orange);border:0;color:#392f24;border-radius:12px;padding:12px 18px;font-weight:800;font-size:13px;box-shadow:0 5px 0 #c47c36;transition:.15s}
+.primary:hover{transform:translateY(-2px);box-shadow:0 7px 0 #c47c36}
+.secondary{background:white;border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:10px 14px;font-weight:700;font-size:12px}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:28px 0 14px;gap:12px}
+.section-head h2{margin:0;font-size:21px;color:var(--navy)}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:0 4px 15px #284e5a08}
+.district-card{padding:0;overflow:hidden;cursor:pointer;transition:.2s}
+.district-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.district-art{height:125px;display:grid;place-items:center;font-size:55px;position:relative;overflow:hidden}
+.district-art:before,.district-art:after{content:"";position:absolute;border-radius:50%;background:#ffffff30}
+.district-art:before{width:120px;height:120px;left:-35px;top:-35px}.district-art:after{width:80px;height:80px;right:-15px;bottom:-25px}
+.art-desert{background:linear-gradient(145deg,#f8d28d,#e99b61)}.art-snow{background:linear-gradient(145deg,#c8e6f0,#8bbacb)}
+.art-city{background:linear-gradient(145deg,#b7d7db,#6696a8)}.art-rain{background:linear-gradient(145deg,#b8d7b6,#5b9c82)}
+.district-art span{z-index:1;filter:drop-shadow(0 7px 4px #3c5b5b30)}
+.card-body{padding:15px}.card-body h3{margin:0 0 6px;font-size:15px}.card-body p{font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+.tag{display:inline-block;border-radius:30px;background:#edf5f3;color:#467568;font-size:10px;padding:5px 9px;font-weight:700}
+.two-col{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+.mission{display:flex;gap:14px;align-items:center}.avatar{width:68px;height:68px;flex:none;border-radius:20px;display:grid;place-items:center;font-size:42px;background:#fff0d9}
+.mission h3{margin:0 0 5px;font-size:15px}.mission p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+.stat{background:#f5f9f7;border-radius:13px;padding:12px}.stat strong{display:block;font-size:20px;color:var(--blue)}.stat small{color:var(--muted);font-size:10px}
+.page-title{font-size:27px;color:var(--navy);margin:8px 0 5px}.lead{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 20px}
+.map-panel{background:linear-gradient(135deg,#d9eee5,#b5d7d4);border-radius:22px;padding:20px;min-height:310px;position:relative;overflow:hidden}
+.map-panel:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(35deg,transparent 0 44px,#ffffff65 45px 52px),repeating-linear-gradient(125deg,transparent 0 65px,#ffffff50 66px 73px);opacity:.7}
+.map-city{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:660px;margin:auto}
+.map-district{min-height:115px;border:2px solid #ffffffb8;border-radius:18px;background:#ffffffb8;padding:13px;text-align:left;color:var(--ink);box-shadow:0 6px 18px #315a5a18;transition:.2s}
+.map-district:hover{transform:scale(1.025);background:white}.map-district strong{display:block;font-size:13px;margin:6px 0 3px}.map-district small{font-size:10px;color:var(--muted)}.map-district .emoji{font-size:27px}
+.lab-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.65fr);gap:16px;align-items:start}
+.lab-stage{background:linear-gradient(180deg,#e7f4f0,#f8f5e9);border-radius:22px;padding:18px;min-height:420px;border:1px solid #dce9e4}
+.stage-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.stage-top strong{font-size:14px}
+.experiment-scene{height:230px;border-radius:17px;background:linear-gradient(#c9e8ef 0 58%,#b9d5a3 58% 100%);position:relative;overflow:hidden;display:flex;align-items:end;justify-content:space-around;padding:20px 14px 22px}
+.sun{position:absolute;width:65px;height:65px;border-radius:50%;background:#ffcf72;top:18px;right:48px;box-shadow:0 0 0 12px #ffdf9a66,0 0 45px #ffc85b}
+.cloud{position:absolute;top:43px;left:50px;font-size:42px;opacity:.8}
+.sample{width:28%;height:104px;position:relative;display:flex;align-items:end;justify-content:center}
+.sample-surface{width:100%;height:60px;border-radius:8px 8px 3px 3px;box-shadow:0 7px 10px #435d4b28;position:relative}
+.sample-surface:before{content:"";position:absolute;top:-9px;left:0;right:0;height:12px;border-radius:50%;background:#ffffff30}
+.surface-asphalt{background:repeating-linear-gradient(0deg,#565d60 0 3px,#687176 3px 5px)}
+.surface-concrete{background:linear-gradient(135deg,#c8c9c0,#929f9b)}
+.surface-grass{background:repeating-linear-gradient(110deg,#4c9b65 0 3px,#78b66d 3px 6px)}
+.sample label{position:absolute;bottom:-20px;font-size:10px;font-weight:700}
+.temp-bubble{position:absolute;top:0;background:#fff;border-radius:10px;padding:5px 7px;font-size:11px;font-weight:800;box-shadow:0 3px 10px #36544c22}
+.thermo-row{display:flex;gap:10px;margin-top:30px}
+.temp-chip{flex:1;background:#ffffffc9;border:1px solid #e0eae4;border-radius:11px;padding:9px;text-align:center}
+.temp-chip small{display:block;color:var(--muted);font-size:9px}.temp-chip strong{font-size:17px;color:var(--navy)}
+.controls{display:grid;gap:13px}.control label{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:7px}
+input[type=range]{width:100%;accent-color:var(--blue)}select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:white;color:var(--ink);font-size:12px}
+.control-card h3{margin:0 0 13px;font-size:15px}
+.button-row{display:flex;gap:8px;flex-wrap:wrap}.button-row button{flex:1}
+.note{font-size:10px;color:var(--muted);line-height:1.5;background:#f6f8f5;padding:10px;border-radius:10px}
+.chart-wrap{height:280px;position:relative}.chart-wrap canvas{width:100%;height:100%}
+.data-table{width:100%;border-collapse:collapse;font-size:11px}.data-table th,.data-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:center}.data-table th{color:var(--muted);font-weight:700;background:#f8faf8}.data-table input{width:72px;border:1px solid var(--line);border-radius:7px;padding:6px;text-align:center}
+.city-builder{display:grid;grid-template-columns:1fr 280px;gap:15px}
+.builder-scene{min-height:320px;border-radius:20px;background:linear-gradient(#cdeaf0 0 55%,#b8d8a8 55%);position:relative;overflow:hidden;padding:25px;display:flex;align-items:end;justify-content:space-around}
+.building{width:18%;height:135px;background:#d99f6b;border:4px solid #fff8e9;border-bottom:0;position:relative;border-radius:5px 5px 0 0;box-shadow:5px 0 #9c765b}
+.building:before{content:"";position:absolute;inset:15px 8px;background:repeating-linear-gradient(90deg,#a7d5dc 0 13px,transparent 13px 22px),repeating-linear-gradient(0deg,transparent 0 23px,#fff8e9 23px 29px)}
+.tree{font-size:38px;filter:drop-shadow(0 5px 3px #506b4a30)}
+.builder-tools{display:grid;gap:9px}
+.tool-btn{border:1px solid var(--line);background:white;border-radius:11px;padding:10px;text-align:left;font-size:11px;font-weight:700;color:var(--ink)}
+.tool-btn:hover{border-color:var(--green);background:#f4faf5}
+.definition{border-left:3px solid var(--orange);padding:10px 13px;background:#fffaf0;border-radius:0 10px 10px 0;margin:9px 0}
+.definition strong{font-size:13px}.definition p{font-size:11px;color:var(--muted);margin:5px 0 0;line-height:1.5}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:white;padding:12px 17px;border-radius:12px;font-size:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:.25s;z-index:30;pointer-events:none}.toast.show{opacity:1;transform:none}
+.dialog{position:fixed;inset:0;background:#142c3bb0;display:none;place-items:center;padding:20px;z-index:20}.dialog.open{display:grid}.dialog-box{background:white;border-radius:20px;padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow)}.dialog-box h3{margin:0 0 8px}.dialog-box p{color:var(--muted);font-size:13px;line-height:1.6}.dialog-actions{display:flex;justify-content:end;gap:8px;margin-top:18px}
+.footer{text-align:center;color:#91a0a5;font-size:10px;padding:30px 0 0}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.lab-layout{grid-template-columns:1fr}.city-builder{grid-template-columns:1fr}}
+@media(max-width:720px){
+ .sidebar{width:260px;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:none}
+ .main{margin-left:0;width:100%;padding:16px}.mobile-menu{display:inline-flex}
+ .hero{padding:27px 23px;min-height:350px}.hero:after{width:100%;height:40%;opacity:.45}
+ .two-col{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.map-city{grid-template-columns:1fr 1fr}
+ .section-head{align-items:start;flex-direction:column}.stat-row{grid-template-columns:1fr 1fr 1fr}
+ .builder-scene{min-height:260px;padding:12px}.building{height:105px}
+}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.map-city{grid-template-columns:1fr}.map-district{min-height:90px}.hero h1{font-size:32px}.stat-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brand-mark">🦊</div><div><strong>CITY LAB</strong><small>ZOOTOPIA RESEARCH</small></div></div>
+  <div class="nav-label">Зерттеу орталығы</div>
+  <nav>
+    <button class="nav-btn active" data-page="home"><span class="nav-icon">🏙️</span>Басты бет</button>
+    <button class="nav-btn" data-page="districts"><span class="nav-icon">🗺️</span>Қала аудандары</button>
+    <button class="nav-btn" data-page="lab"><span class="nav-icon">🔬</span>Зертханалық тақта</button>
+    <button class="nav-btn" data-page="results"><span class="nav-icon">📊</span>Өлшеу нәтижелері</button>
+    <button class="nav-btn" data-page="solution"><span class="nav-icon">🌳</span>Қалаға шешім ұсыну</button>
+    <button class="nav-btn" data-page="reference"><span class="nav-icon">📚</span>Анықтамалар</button>
+  </nav>
+  <div class="side-bottom">Zootopia City Science Division<br>Физика арқылы қаланы жақсырақ етейік.</div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="secondary mobile-menu" id="menuBtn">☰</button>
+      <div class="breadcrumb">ЗВЕРОПОЛИС / <span id="crumb">БАСТЫ БЕТ</span></div>
+    </div>
+    <div class="top-actions"><span class="pill"><span class="status-dot"></span>Зертхана дайын</span><span class="pill">👩‍🔬 Жас зерттеуші</span></div>
+  </div>
+
+  <section class="page active" id="home">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Zootopia City Science Division</div>
+        <h1>Қаланы физика<br>арқылы зертте!</h1>
+        <p>Сәлем, жас зерттеуші! Зверополисте сенің көмегің қажет. Қаладағы мәселелерді анықтап, өлшеу жүргізіп, ғылыми шешім ұсынатын кез келді.</p>
+        <button class="primary" data-go="districts">Зерттеуді бастау →</button>
+      </div>
+    </div>
+    <div class="section-head"><div><h2>Сіздің зерттеу миссияңыз</h2><p>Қаладағы төрт бағыттың бірін таңдап, зерттеуге кірісіңіз.</p></div></div>
+    <div class="grid">
+      <article class="card district-card" data-district="heat"><div class="district-art art-desert"><span>☀️🏜️</span></div><div class="card-body"><h3>Sahara Square</h3><p>Қала беттері неге әртүрлі қызады?</p><span class="tag">Температура · °C</span></div></article>
+      <article class="card district-card" data-district="insulation"><div class="district-art art-snow"><span>❄️🏢</span></div><div class="card-body"><h3>Tundratown</h3><p>Ғимарат жылуды қалай сақтайды?</p><span class="tag">Жылу алмасу</span></div></article>
+      <article class="card district-card" data-district="noise"><div class="district-art art-city"><span>🚕🔊</span></div><div class="card-body"><h3>Downtown</h3><p>Қаладағы шу деңгейі қандай?</p><span class="tag">Дыбыс · дБ</span></div></article>
+      <article class="card district-card" data-district="climate"><div class="district-art art-rain"><span>🌿💧</span></div><div class="card-body"><h3>Rainforest District</h3><p>Жасыл аймақ микроклиматқа әсер ете ме?</p><span class="tag">Ылғалдылық · %</span></div></article>
+    </div>
+    <div class="section-head"><div><h2>Зерттеу бөлімінен хабарлама</h2><p>Миссияға кіріспес бұрын Джудидің нұсқауымен танысыңыз.</p></div></div>
+    <div class="two-col">
+      <div class="card mission"><div class="avatar">🐰</div><div><h3>Джуди Хоппс</h3><p>«Қаладағы әр мәселенің артында физикалық құбылыс тұруы мүмкін. Бақыла, өлше және өз қорытындыңды дәлелде!»</p></div></div>
+      <div class="card mission"><div class="avatar">🦊</div><div><h3>Ник Уайлд</h3><p>«Тек болжам жасау жеткіліксіз. Нағыз зерттеуші өз ойын деректермен дәлелдейді!»</p></div></div>
+    </div>
+    <div class="footer">CITY LAB · ОЙЛАН · ЗЕРТТЕ · ШЕШ</div>
+  </section>
+
+  <section class="page" id="districts">
+    <h1 class="page-title">Зверополис аудандары</h1><p class="lead">Картадан зерттеу аймағын таңдаңыз. Әр ауданның өз физикалық мәселесі бар.</p>
+    <div class="map-panel"><div class="map-city">
+      <button class="map-district" data-district="heat"><span class="emoji">☀️🏜️</span><strong>Sahara Square</strong><small>Қаланың қызуы · Температура</small></button>
+      <button class="map-district" data-district="insulation"><span class="emoji">❄️🏢</span><strong>Tundratown</strong><small>Жылу оқшаулау · Жылу өткізгіштік</small></button>
+      <button class="map-district" data-district="noise"><span class="emoji">🚦🔊</span><strong>Downtown</strong><small>Шу ластануы · Дыбыс деңгейі</small></button>
+      <button class="map-district" data-district="climate"><span class="emoji">🌴💧</span><strong>Rainforest District</strong><small>Микроклимат · Ылғалдылық</small></button>
+    </div></div>
+    <div class="section-head"><div><h2>Зерттеу қалай жүргізіледі?</h2><p>Барлық миссия бір ғылыми алгоритммен орындалады.</p></div></div>
+    <div class="grid">
+      <div class="card"><div style="font-size:27px">👀</div><h3>1. Бақыла</h3><p class="lead">Қаладағы мәселені анықта.</p></div>
+      <div class="card"><div style="font-size:27px">💡</div><h3>2. Болжам жаса</h3><p class="lead">Мәселенің себебін түсіндір.</p></div>
+      <div class="card"><div style="font-size:27px">🌡️</div><h3>3. Өлше</h3><p class="lead">Құралдармен тәжірибе жүргіз.</p></div>
+      <div class="card"><div style="font-size:27px">🧠</div><h3>4. Шешім ұсын</h3><p class="lead">Деректерге сүйеніп қорытынды жаса.</p></div>
+    </div>
+  </section>
+
+  <section class="page" id="lab">
+    <h1 class="page-title">Зертханалық тақта</h1><p class="lead">Sahara Square миссиясы: әртүрлі қалалық беттердің күн сәулесінде қызуын салыстырыңыз.</p>
+    <div class="lab-layout">
+      <div class="lab-stage">
+        <div class="stage-top"><strong>☀️ Қыздыру эксперименті</strong><span class="tag" id="labStatus">Дайын</span></div>
+        <div class="experiment-scene">
+          <div class="sun" id="sun"></div><div class="cloud">☁️</div>
+          <div class="sample"><div class="temp-bubble" id="bubbleAsphalt">22.0°C</div><div class="sample-surface surface-asphalt"></div><label>Асфальт</label></div>
+          <div class="sample"><div class="temp-bubble" id="bubbleConcrete">22.0°C</div><div class="sample-surface surface-concrete"></div><label>Бетон</label></div>
+          <div class="sample"><div class="temp-bubble" id="bubbleGrass">22.0°C</div><div class="sample-surface surface-grass"></div><label>Шөп</label></div>
+        </div>
+        <div class="thermo-row">
+          <div class="temp-chip"><small>АСФАЛЬТ</small><strong id="tempAsphalt">22.0°C</strong></div>
+          <div class="temp-chip"><small>БЕТОН</small><strong id="tempConcrete">22.0°C</strong></div>
+          <div class="temp-chip"><small>ШӨП</small><strong id="tempGrass">22.0°C</strong></div>
+        </div>
+        <div class="section-head" style="margin:20px 0 8px"><div><h2 style="font-size:15px">Температураның өзгеруі</h2><p>Уақыт бойынша температура графигі</p></div></div>
+        <div class="chart-wrap"><canvas id="labChart"></canvas></div>
+      </div>
+      <div class="card control-card">
+        <h3>⚙️ Эксперимент параметрлері</h3>
+        <div class="controls">
+          <div class="control"><label for="sunIntensity">Күн сәулесінің қарқындылығы <b id="sunValue">70%</b></label><input id="sunIntensity" type="range" min="10" max="100" value="70"></div>
+          <div class="control"><label for="duration">Қыздыру уақыты <b id="durationValue">10 мин</b></label><input id="duration" type="range" min="2" max="20" value="10"></div>
+          <div class="control"><label for="shade">Көлеңке жағдайы</label><select id="shade"><option value="1">Көлеңке жоқ</option><option value=".65">Жартылай көлеңке</option><option value=".3">Толық көлеңке</option></select></div>
+          <div class="control"><label for="surfaceColor">Бет түсі (асфальт үлгісі)</label><select id="surfaceColor"><option value="dark">Қараңғы</option><option value="light">Ашық</option></select></div>
+          <div class="button-row"><button class="primary" id="runExperiment">▶ Экспериментті бастау</button><button class="secondary" id="resetExperiment">↺ Қалпына келтіру</button></div>
+          <div class="note">Модель оқу мақсатындағы ықшамдалған жылу балансына негізделген. Көрсеткіштер нақты қалалық өлшеу емес, виртуалды эксперимент нәтижесі.</div>
+        </div>
+        <div class="definition"><strong>Физикалық негіз</strong><p>Жұтылған энергия беттің температурасын арттырады. Материалдың жылу сыйымдылығы, түсі, көлеңке және қоршаған ортамен жылу алмасуы нәтижеге әсер етеді.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="results">
+    <h1 class="page-title">Өлшеу нәтижелері</h1><p class="lead">Эксперимент нәтижелерін кестеден қарап, салыстырыңыз. Қажет болса, мәндерді қолмен өзгертіңіз.</p>
+    <div class="card">
+      <div class="section-head" style="margin-top:0"><div><h2 style="font-size:16px">Температура кестесі</h2><p>Соңғы эксперименттің деректері</p></div><button class="secondary" id="exportCsv">↓ CSV жүктеу</button></div>
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Уақыт (мин)</th><th>Асфальт (°C)</th><th>Бетон (°C)</th><th>Шөп (°C)</th></tr></thead><tbody id="dataBody"><tr><td colspan="4">Әзірге дерек жоқ. Алдымен эксперимент жүргізіңіз.</td></tr></tbody></table></div>
+    </div>
+    <div class="two-col" style="margin-top:15px">
+      <div class="card"><h3>🔎 Талдау сұрақтары</h3><ol style="font-size:12px;line-height:2;color:#5e7079;padding-left:18px"><li>Қай материал ең жоғары температураға жетті?</li><li>Көлеңке температураға қалай әсер етті?</li><li>Бет түсі мен қызу арасында қандай байланыс бар?</li><li>Гипотезаңыз расталды ма?</li></ol></div>
+      <div class="card"><h3>📝 Зерттеу қорытындысы</h3><textarea id="conclusion" rows="5" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px inherit;resize:vertical" placeholder="Зерттеу нәтижесін осында жазыңыз..."></textarea><button class="primary" style="margin-top:9px" id="saveConclusion">Қорытындыны сақтау</button></div>
+    </div>
+  </section>
+
+  <section class="page" id="solution">
+    <h1 class="page-title">Қалаға шешім ұсыну</h1><p class="lead">Зерттеу нәтижелеріне сүйеніп, Зверополистің бір бөлігін жаңартыңыз.</p>
+    <div class="city-builder">
+      <div class="builder-scene" id="builderScene">
+        <div class="sun" style="width:45px;height:45px;top:15px;right:35px"></div>
+        <div class="building" id="building1"></div><div class="tree">🌳</div><div class="building" id="building2"></div><div class="tree">🌴</div><div class="building" id="building3"></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Қаланы жаңарту құралдары</h3>
+        <div class="builder-tools">
+          <button class="tool-btn" id="addTree">🌳 Ағаш қосу</button>
+          <button class="tool-btn" id="addGreen">🌱 Жасыл аймақты көбейту</button>
+          <button class="tool-btn" id="coolRoof">🏠 Шатырды ашық түске ауыстыру</button>
+          <button class="tool-btn" id="resetCity">↺ Қаланы бастапқы күйге қайтару</button>
+        </div>
+        <div class="definition"><strong>Жоба көрсеткіштері</strong><p id="cityStatus">Қала бастапқы күйде. Өзгеріс енгізіп көріңіз.</p></div>
+        <div class="control"><label for="proposal">Сіздің ұсынысыңыз</label><textarea id="proposal" rows="4" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px inherit" placeholder="Қаладағы мәселені шешу үшін..."></textarea></div>
+        <button class="primary" style="width:100%;margin-top:10px" id="saveProposal">Ұсынысты сақтау</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:15px"><h3>Джудидің зерттеу сұрағы</h3><p class="lead" style="margin:0">«Ұсынған өзгерістерің қаланың температурасына қалай әсер етеді? Қай физикалық құбылысқа сүйендің? Өз шешіміңді зерттеу деректерімен дәлелде».</p></div>
+  </section>
+
+  <section class="page" id="reference">
+    <h1 class="page-title">Физикалық анықтамалар</h1><p class="lead">Зерттеу кезінде қажет болатын негізгі ұғымдар мен формулалар.</p>
+    <div class="two-col">
+      <div class="card">
+        <div class="definition"><strong>Температура (T)</strong><p>Дененің жылулық күйін сипаттайтын физикалық шама. Өлшем бірлігі – °C немесе K.</p></div>
+        <div class="definition"><strong>Жылу мөлшері (Q)</strong><p>Жылу алмасу кезінде берілетін немесе алынатын энергия. Өлшем бірлігі – джоуль (Дж).</p></div>
+        <div class="definition"><strong>Меншікті жылу сыйымдылығы (c)</strong><p>1 кг заттың температурасын 1°C-қа өзгертуге қажетті жылу мөлшері.</p></div>
+        <div class="definition"><strong>Жылу өткізгіштік</strong><p>Энергияның зат ішінде немесе жанасқан денелер арасында берілуі.</p></div>
+      </div>
+      <div class="card">
+        <h3>Негізгі формулалар</h3>
+        <div class="definition"><strong>Жылу мөлшері</strong><p style="font-size:18px;color:var(--navy)">Q = cmΔT</p></div>
+        <div class="definition"><strong>Температура өзгерісі</strong><p style="font-size:18px;color:var(--navy)">ΔT = T₂ − T₁</p></div>
+        <div class="definition"><strong>Қуат</strong><p style="font-size:18px;color:var(--navy)">P = Q / t</p></div>
+        <div class="note">Формулаларды қолданғанда барлық шамалардың өлшем бірліктерін тексеріңіз.</div>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="dialog" id="districtDialog"><div class="dialog-box"><h3 id="dialogTitle">Зерттеу миссиясы</h3><p id="dialogText"></p><div class="dialog-actions"><button class="secondary" id="closeDialog">Кейін</button><button class="primary" id="startDistrict">Зерттеуге өту →</button></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const pages=[...document.querySelectorAll('.page')];
+const labels={home:'БАСТЫ БЕТ',districts:'ҚАЛА АУДАНДАРЫ',lab:'ЗЕРТХАНАЛЫҚ ТАҚТА',results:'ӨЛШЕУ НӘТИЖЕЛЕРІ',solution:'ҚАЛАҒА ШЕШІМ ҰСЫНУ',reference:'АНЫҚТАМАЛАР'};
+function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));$('#crumb').textContent=labels[id]||'';$('#sidebar').classList.remove('open');if(id==='results')renderTable();if(id==='lab')drawChart();window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
+$('#menuBtn').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
+
+const districts={
+ heat:{title:'Sahara Square – Қаланың қызуы',text:'Аудан тұрғындары күндізгі ыстыққа шағымдануда. Асфальт, бетон және жасыл аймақтардың температураларын салыстырып, қандай факторлар әсер ететінін анықтаңыз.',page:'lab'},
+ insulation:{title:'Tundratown – Жылуды сақтау',text:'Ғимараттар жылуды тез жоғалтады. Әртүрлі оқшаулағыш материалдардың жылу өткізгіштігін салыстыру қажет. Бұл нұсқада негізгі виртуалды зертхана – қызу эксперименті; қосымша зерттеуді анықтамалар мен ұсыныс бөлімінде жоспарлауға болады.',page:'lab'},
+ noise:{title:'Downtown – Шу ластануы',text:'Көлік қозғалысы кезінде тұрғындар шу деңгейінің жоғары екенін байқаған. Дыбыс деңгейін децибелмен өлшеу, уақыт пен қашықтықтың әсерін зерттеу қажет. Қазіргі демо-зертхана температура моделін көрсетеді; шу өлшеуін нақты дыбыс деңгей өлшегішпен жүргізіңіз.',page:'lab'},
+ climate:{title:'Rainforest District – Қала микроклиматы',text:'Жасыл аймақтар температура мен ылғалдылыққа қалай әсер ететінін зерттеңіз. Ауа температурасы мен салыстырмалы ылғалдылықты датчикпен өлшеп, көлеңкелі және ашық нүктелерді салыстырыңыз.',page:'lab'}
+};
+let selectedDistrict='heat';
+function openDistrict(key){selectedDistrict=key;const d=districts[key];$('#dialogTitle').textContent=d.title;$('#dialogText').textContent=d.text;$('#districtDialog').classList.add('open');}
+document.querySelectorAll('[data-district]').forEach(el=>el.addEventListener('click',()=>openDistrict(el.dataset.district)));
+$('#closeDialog').onclick=()=>$('#districtDialog').classList.remove('open');
+$('#startDistrict').onclick=()=>{$('#districtDialog').classList.remove('open');showPage(districts[selectedDistrict].page);if(selectedDistrict!=='heat')toast('Бұл ауданның миссиясы нақты құралмен өлшеуді қажет етеді. Қазіргі виртуалды модель – жылу зертханасы.');};
+
+let experimentData=[],running=false;
+const initial=22;
+function modelTemps(){
+ const intensity=+$('#sunIntensity').value/100,shade=+$('#shade').value,duration=+$('#duration').value;
+ const color=$('#surfaceColor').value;
+ const times=Array.from({length:duration+1},(_,i)=>i);
+ // Simplified illustrative energy-balance response: different absorption/cooling coefficients.
+ const params=[
+  {abs:color==='dark'?.88:.55,loss:.075,capacity:1.0},
+  {abs:.66,loss:.085,capacity:1.25},
+  {abs:.48,loss:.12,capacity:1.55}
+ ];
+ return times.map(t=>params.map((p,j)=>{
+   const effective=intensity*shade*p.abs;
+   const rise=(effective*34/p.capacity)*(1-Math.exp(-p.loss*t*2.3));
+   const evap=j===2?0.8*(1-Math.exp(-.18*t)):0;
+   return +(initial+rise-evap).toFixed(1);
+ }));
+}
+function drawChart(){
+ const canvas=$('#labChart');if(!canvas)return;
+ const rect=canvas.getBoundingClientRect();const dpr=window.devicePixelRatio||1;
+ canvas.width=Math.max(300,rect.width*dpr);canvas.height=Math.max(180,rect.height*dpr);
+ const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+ const w=canvas.width/dpr,h=canvas.height/dpr,p={l:42,r:16,t:15,b:32};
+ ctx.clearRect(0,0,w,h);
+ const rows=experimentData.length?experimentData:modelTemps();
+ const vals=rows.flat();let min=Math.floor(Math.min(initial,...vals)-2),max=Math.ceil(Math.max(initial,...vals)+2);
+ const x=i=>p.l+i/(rows.length-1||1)*(w-p.l-p.r);
+ const y=v=>h-p.b-(v-min)/(max-min||1)*(h-p.t-p.b);
+ ctx.font='10px Arial';ctx.strokeStyle='#e7eeea';ctx.fillStyle='#819198';ctx.lineWidth=1;
+ for(let i=0;i<=4;i++){let v=min+(max-min)*i/4,yy=y(v);ctx.beginPath();ctx.moveTo(p.l,yy);ctx.lineTo(w-p.r,yy);ctx.stroke();ctx.fillText(v.toFixed(0)+'°',5,yy+3);}
+ const colors=['#d98548','#6d9bb0','#68a77c'];
+ rows.forEach((r,j)=>{ctx.strokeStyle=colors[j];ctx.lineWidth=2.5;ctx.beginPath();r.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.stroke();r.forEach((v,i)=>{ctx.fillStyle=colors[j];ctx.beginPath();ctx.arc(x(i),y(v),3,0,Math.PI*2);ctx.fill();});});
+ ctx.fillStyle='#71818a';ctx.fillText('Уақыт (мин)',w/2-28,h-5);
+}
+function updateTemps(row){
+ const ids=['Asphalt','Concrete','Grass'],bubbles=['bubbleAsphalt','bubbleConcrete','bubbleGrass'];
+ row.forEach((v,i)=>{$('#temp'+ids[i]).textContent=v.toFixed(1)+'°C';$('#'+bubbles[i]).textContent=v.toFixed(1)+'°C';});
+}
+function renderTable(){
+ const body=$('#dataBody');
+ if(!experimentData.length){body.innerHTML='<tr><td colspan="4">Әзірге дерек жоқ. Алдымен эксперимент жүргізіңіз.</td></tr>';return;}
+ body.innerHTML=experimentData.map((r,i)=>`<tr><td>${i}</td>${r.map(v=>`<td>${v.toFixed(1)}</td>`).join('')}</tr>`).join('');
+}
+function runExperiment(){
+ if(running)return;running=true;experimentData=[];const rows=modelTemps();const total=rows.length-1;let i=0;
+ $('#labStatus').textContent='Жүріп жатыр…';$('#runExperiment').disabled=true;
+ const tick=()=>{if(i>=rows.length){running=false;$('#labStatus').textContent='Аяқталды';$('#runExperiment').disabled=false;renderTable();drawChart();toast('Эксперимент аяқталды. Нәтижелер сақталды.');return;}
+ experimentData.push(rows[i]);updateTemps(rows[i]);drawChart();i++;setTimeout(tick,Math.max(90,700/Math.max(1,total)));};
+ tick();
+}
+$('#runExperiment').addEventListener('click',runExperiment);
+$('#resetExperiment').addEventListener('click',()=>{running=false;experimentData=[];updateTemps([initial,initial,initial]);$('#labStatus').textContent='Дайын';$('#runExperiment').disabled=false;renderTable();drawChart();});
+$('#sunIntensity').addEventListener('input',e=>{$('#sunValue').textContent=e.target.value+'%';$('#sun').style.opacity=.45+(+e.target.value/100)*.55;});
+$('#duration').addEventListener('input',e=>$('#durationValue').textContent=e.target.value+' мин');
+['shade','surfaceColor'].forEach(id=>$('#'+id).addEventListener('change',()=>{if(experimentData.length){toast('Параметр өзгерді. Жаңа экспериментті бастаңыз.');}}));
+function renderTable(){const body=$('#dataBody');if(!experimentData.length){body.innerHTML='<tr><td colspan="4">Әзірге дерек жоқ. Алдымен эксперимент жүргізіңіз.</td></tr>';return;}body.innerHTML=experimentData.map((r,i)=>`<tr><td>${i}</td>${r.map(v=>`<td>${v.toFixed(1)}</td>`).join('')}</tr>`).join('');}
+$('#exportCsv').onclick=()=>{if(!experimentData.length){toast('Алдымен эксперимент жүргізіңіз.');return;}const csv=['Уақыт (мин),Асфальт (°C),Бетон (°C),Шөп (°C)',...experimentData.map((r,i)=>[i,...r].join(','))].join('\n');const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zootopia-citylab-results.csv';a.click();URL.revokeObjectURL(a.href);};
+$('#saveConclusion').onclick=()=>{localStorage.setItem('citylab-conclusion',$('#conclusion').value);toast('Қорытынды осы құрылғыда сақталды.');};
+$('#conclusion').value=localStorage.getItem('citylab-conclusion')||'';
+
+let trees=0,green=false,roof=false;
+function updateCity(){const scene=$('#builderScene');scene.querySelectorAll('.extra-tree,.extra-green').forEach(e=>e.remove());for(let i=0;i<trees;i++){const t=document.createElement('span');t.className='tree extra-tree';t.textContent='🌳';scene.insertBefore(t,scene.lastElementChild);}if(green){const g=document.createElement('div');g.className='extra-green';g.style.cssText='position:absolute;bottom:0;left:0;width:100%;height:25px;background:#68a96c;opacity:.8';scene.appendChild(g);}document.querySelectorAll('.building').forEach(b=>b.style.background=roof?'#eee8cf':'#d99f6b');const estimated=Math.max(0,trees*0.25+(green?1.1:0)+(roof?.7:0));$('#cityStatus').textContent=`Ағаш: ${trees} · Жасыл аймақ: ${green?'қосылды':'бастапқы'} · Ашық шатыр: ${roof?'иә':'жоқ'}. Модельдік салқындату әсері: шартты ${estimated.toFixed(1)}°C.`;}
+$('#addTree').onclick=()=>{trees=Math.min(8,trees+1);updateCity();};
+$('#addGreen').onclick=()=>{green=!green;updateCity();};
+$('#coolRoof').onclick=()=>{roof=!roof;updateCity();};
+$('#resetCity').onclick=()=>{trees=0;green=false;roof=false;updateCity();};
+$('#saveProposal').onclick=()=>{localStorage.setItem('citylab-proposal',$('#proposal').value);toast('Қалаға ұсынысыңыз сақталды.');};
+$('#proposal').value=localStorage.getItem('citylab-proposal')||'';
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2600);}
+window.addEventListener('resize',()=>{if($('#lab').classList.contains('active'))drawChart();});
+renderTable();drawChart();updateCity();
+</script>
+</body>
+</html>
